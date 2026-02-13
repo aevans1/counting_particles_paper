@@ -6,12 +6,11 @@ from utils import deconvolve_assignments, multiplicative_gradient
 
 def main():
 
-    volume_name ="ground_truth_recovar_filtered_aligned"
     path = "data/"
+    volume_name ="recovar_filtered_aligned"
 
-
+    data_names = ["default", "noisy_images"]
     print("Computing data for experimental spike, noise added to images comparison")    
-    data_names = ["ground_truth_poses_80_20", "noisy_ground_truth_poses_80_20"]
     
     em_weights = np.zeros((2,2))
     hard_weights = np.zeros((2,2))
@@ -22,7 +21,7 @@ def main():
 
         log_likelihood = np.load(path + f"log_likelihoods_recovar_{data_name}_{volume_name}.npy")
         error_predicted = np.load(path + f"error_predicted_recovar_{data_name}_{volume_name}.npy")
-        
+       
         num_data, num_nodes = log_likelihood.shape
         print(f"number of images used: {num_data}")
         print(f"number of structures used: {num_nodes}")
@@ -81,8 +80,7 @@ def main():
 
         log_likelihood = jnp.load(path + f"log_likelihoods_recovar_{data_name}_{volume_name}.npy")
         error_predicted = jnp.load(path + f"error_predicted_recovar_{data_name}_{volume_name}.npy")
-        log_likelihood = log_likelihood - jnp.max(log_likelihood, 1)[:, jnp.newaxis]
-
+       
         num_data, num_nodes = log_likelihood.shape
         print(f"number of images used: {num_data}")
         print(f"number of structures used: {num_nodes}")
@@ -119,11 +117,9 @@ def main():
 
     for idx in range(len(data_names)): 
         data_name = data_names[idx]
-        volume_name ="ground_truth_recovar_filtered_aligned"
     
         log_likelihood = jnp.load(path + f"log_likelihoods_recovar_{data_name}_{volume_name}.npy")
         error_predicted = jnp.load(path + f"error_predicted_recovar_{data_name}_{volume_name}.npy")
-        log_likelihood = log_likelihood - jnp.max(log_likelihood, 1)[:, jnp.newaxis]
 
         # solve with expectation maximization (em)
         em_weights[idx, :] = multiplicative_gradient(log_likelihood)

@@ -6,13 +6,15 @@ import pickle
 import sys
 import scipy
 import matplotlib as mpl
-
 from matplotlib.transforms import ScaledTranslation
 
 
-
 def main():
-    mpl.rcParams['text.usetex'] = True
+
+    # Can uncomment this for nicer, slower figs, if tex is loaded
+    #mpl.rcParams['text.usetex'] = True
+    mpl.rcParams['text.usetex'] = False
+    
     mpl.rcParams['font.family'] = 'sans-serif'
     mpl.rcParams['font.sans-serif'] = 'DejaVu Sans'
     mpl.rcParams['axes.titlesize'] = 28
@@ -50,9 +52,8 @@ def main():
     deconv_weights = file["deconv_weights"]
     
     # Hard-coded values taken from cryosparc jobs 
-    csparc_weights = np.zeros((5, 2))
-    csparc_weights[:, 0] = 0.01*np.array([75.3, 59.7, 51.3, 50.9, 50.2])
-    csparc_weights[:, 1] = 1 - csparc_weights[:, 0]
+    fname = "data/3D_classification_noisy_rotations.npy"
+    csparc_weights = np.load(fname)
 
     figname = "spike_experimental_rotation_experiment" 
     plt.figure(figsize=(10, 6))
@@ -71,10 +72,10 @@ def main():
     plt.savefig(f"figures/{figname}" + ".pdf", dpi=600)
 
 
-    # SHIFTS EXPERIMENT
-    # Load in stats
+    ## SHIFTS EXPERIMENT
     noise_levels = [3.0, 3.25, 3.5, 3.75, 4.0]
-
+   
+    # Load in stats
     filename = data_path + "shift_experiment_weights.pkl"
     with open(filename, 'rb') as f:
         file = pickle.load(f)     
@@ -84,9 +85,11 @@ def main():
     deconv_weights = file["deconv_weights"]
 
     # Hard-coded values taken from cryosparc jobs 
-    csparc_weights = np.zeros((5, 2))
-    csparc_weights[:, 0] = 0.01*np.array([73.4, 69.9, 62.4, 51.4, 50.8])
-    csparc_weights[:, 1] = 1 - csparc_weights[:, 0]
+    fname = "data/3D_classification_noisy_shifts.npy"
+    np.save(fname, csparc_weights) 
+    csparc_weights = np.load(fname)
+
+
 
     figname = "spike_experimental_shift_experiment" 
     plt.figure(figsize=(10, 6))
@@ -106,7 +109,7 @@ def main():
     plt.savefig(f"figures/{figname}" + ".pdf", dpi=600)
 
 
-    # NOISE TO IMAGES EXPERIMENT
+    ## NOISE TO IMAGES EXPERIMENT
     # Load in stats
     filename = data_path + "ground_truth_experiment_weights.pkl"
     with open(filename, 'rb') as f:
@@ -120,7 +123,10 @@ def main():
     soft_assignment = [soft_weights[0, 0], soft_weights[1, 0]]
     ensemble_reweighting = [em_weights[0, 0], em_weights[1, 0]]
     deconvolution = [deconv_weights[0, 0], deconv_weights[1, 0]]
-    three_dee_classification_gt = [0.76, 0.608]
+
+    # Hard-coded values taken from cryosparc jobs 
+    fname = "data/3D_classification_noisy_images.npy"
+    csparc_weights = np.load(fname)
 
     fig, (ax1, ax2) = plt.subplots(1,2,figsize=(10, 6))
     barWidth = 0.01
@@ -138,7 +144,7 @@ def main():
     edgecolor ='black', label ='Ensemble Reweight')
     ax1.bar(br4, deconvolution[0], color =colors[3], width = barWidth, align = 'center', 
     edgecolor ='black', label ='Deconvolve')
-    ax1.bar(br5, three_dee_classification_gt[0], color = colors[4], width = barWidth, align = 'center', 
+    ax1.bar(br5, csparc_weights[0], color = colors[4], width = barWidth, align = 'center', 
     edgecolor ='black', label ='3D Classification')
 
     ax1.set_yticks([0.5, 0.65, 0.8])
@@ -158,7 +164,7 @@ def main():
     edgecolor ='black', label ='Ensemble Reweight')
     ax2.bar(br4, deconvolution[1], color =colors[3], width = barWidth, align = 'center', 
     edgecolor ='black', label ='Deconvolve')
-    ax2.bar(br5, three_dee_classification_gt[1], color = colors[4], width = barWidth, align = 'center', 
+    ax2.bar(br5, csparc_weights[1], color = colors[4], width = barWidth, align = 'center', 
     edgecolor ='black', label ='3D Classification')
 
     figname = "spike_experimental_split_plot" 
@@ -174,8 +180,11 @@ def main():
     plt.subplots_adjust(hspace=1.0)
     plt.tight_layout()
     plt.savefig(f"figures/{figname}_subfigs" + ".png", dpi=600)
+    plt.savefig(f"figures/{figname}_subfigs" + ".pdf", dpi=600)
+
 
     plt.show()
+
 
 if __name__ == '__main__':
     main()
