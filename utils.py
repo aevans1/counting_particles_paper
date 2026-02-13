@@ -18,6 +18,7 @@ def deconvolve_assignments(assignments, error_predicted):
     deconvolve_pop = x.value 
     return observed_pop, deconvolve_pop, deconvolve_matrix
 
+
 @jax.jit
 def grad_log_prob(weights,likelihood):
     """
@@ -36,14 +37,14 @@ def update_weights(weights, grad):
 
 def multiplicative_gradient(
     log_likelihood,
-    tol=1e-30,
-    max_iterations=100000
+    tol=1e-3,
+    max_iterations=10000
 ):
 
     num_images, num_structures = log_likelihood.shape
 
     # Initialize Weights
-    weights = (1/num_structures)*jnp.ones(num_structures).astype('float64')
+    weights = (1/num_structures)*jnp.ones(num_structures)
 
     # Normalizing log likelihood by row for stability, the gradient is invariant to this rescaling
     log_likelihood = log_likelihood - jnp.max(log_likelihood, 1)[:, jnp.newaxis]
