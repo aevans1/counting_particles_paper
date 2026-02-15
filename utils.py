@@ -2,6 +2,7 @@ import numpy as np
 import jax.numpy as jnp
 import jax
 import cvxpy as cp
+import pickle
 
 
 def deconvolve_assignments(assignments, error_predicted):
@@ -68,3 +69,14 @@ def multiplicative_gradient(
             print("exiting!")
             break
     return weights
+
+
+def pickle_dump(object, file):
+    with open(file, "wb") as f:
+        pickle.dump(object, f)
+
+
+def pickle_load( file):
+    with open(file, "rb") as f:
+        return pickle.load(f)
+
