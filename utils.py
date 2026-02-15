@@ -80,3 +80,36 @@ def pickle_load( file):
     with open(file, "rb") as f:
         return pickle.load(f)
 
+################################################################
+# NOTE: functions below are utils from recovar software, latent_density.py
+################################################################
+def grid_to_pca_coord(v, bounds, num_points):
+    x =  v * ( bounds[:,1]  - bounds[:,0] ) / (num_points - 1)  + bounds[:,0]
+    return x
+
+def pca_coord_to_grid(x, bounds, num_points, to_int = False):
+    v =  (x - bounds[:,0] ) / ( bounds[:,1]  - bounds[:,0] ) * (num_points - 1)    
+    if to_int:
+        return np.round(v).astype(int)   
+    else:
+        return v
+
+def get_grid_to_z(bounds, num_points ):
+    def grid_to_z(x):
+        return grid_to_pca_coord(x, bounds = bounds, num_points = num_points)        
+    return grid_to_z
+
+def get_z_to_grid(bounds, num_points ):
+    def z_to_grid(x, to_int = False):
+        return pca_coord_to_grid(x, bounds = bounds, num_points = num_points, to_int = to_int)        
+    return z_to_grid
+
+def get_grid_z_mappings(bounds, num_points):
+    return get_grid_to_z(bounds, num_points ), get_z_to_grid(bounds, num_points )
+
+def zs_to_grid(zs, bounds, num_points):
+    _, z_to_grid = get_grid_z_mappings(bounds, num_points = num_points)
+    zs_grid = z_to_grid(zs)
+    return zs_grid
+
+
