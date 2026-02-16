@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import seaborn as sns
-import pickle
-
-from matplotlib.transforms import ScaledTranslation
 
 import utils
 
@@ -48,19 +44,18 @@ def main():
     noise_levels = noise_levels[:plot_idx]
         
     # Load in stats
-    file = open(data_folder + '/' + 'pops_errors.pkl','rb')
-    pops_errors = pickle.load(file)
+    fname = f"{data_folder}/pops_errors.pkl"
+    pops_errors = utils.pickle_load(fname)
     deconv_weights = pops_errors["deconv_weights"][:plot_idx, :]
     em_weights = pops_errors["em_weights"][:plot_idx, :]
     soft_weights = pops_errors["soft_weights"][:plot_idx, :]
     hard_weights = pops_errors["hard_weights"][:plot_idx, :]
-    file.close()
 
     # Load in cryosparc stuff
     cryosparc_true_volumes_populations = 0.01*np.load(f"{data_folder}/cryosparc_classification_true_volumes_results.npy")[:plot_idx, :]
 
     # Plot 
-    figname = "populations_all_methods"
+    figname = "spike_synthetic_all_populations"
     plt.figure(figsize=(10, 6))
     plt.semilogx(noise_levels, hard_weights[:, 0], label='Hard Assign', color=colors[0], marker='o',  linestyle='solid')
     plt.semilogx(noise_levels, soft_weights[:, 0], label='Soft Assign', color=colors[1], marker='o',  linestyle='solid')
@@ -73,7 +68,6 @@ def main():
     plt.xlabel('Noise Level')
     plt.ylabel('% Population in state 1')
     plt.title("Estimated Population in State 1")
-    figname = figname + "_with_labels"
     plt.ylim([0.48, 0.85])
         
     # reordering the labels 
@@ -85,7 +79,7 @@ def main():
     # pass handle & labels lists along with order as below 
     plt.legend([handles[i] for i in order], [labels[i] for i in order])  
     plt.tight_layout()
-    plt.savefig(plot_folder + '/' + figname + '.png', dpi=600)
+    plt.savefig(f"{plot_folder}/{figname}.png", dpi=600)
     
 if __name__ == '__main__':
     main()

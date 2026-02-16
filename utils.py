@@ -76,7 +76,7 @@ def pickle_dump(object, file):
         pickle.dump(object, f)
 
 
-def pickle_load( file):
+def pickle_load(file):
     with open(file, "rb") as f:
         return pickle.load(f)
 

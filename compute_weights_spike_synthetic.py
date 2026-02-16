@@ -1,6 +1,5 @@
 import numpy as np
 import jax.numpy as jnp
-import matplotlib.pyplot as plt
 
 import utils
 
@@ -29,7 +28,9 @@ def main():
         log_likelihoods = likelihoods_assignments['log_likelihoods']
         hard_assignments = likelihoods_assignments['hard_assignments']
         error_predicted = likelihoods_assignments['error_predicted']
-        
+        fname = output_folder + '/' + f'likelihoods_assignments_dataset{idx}.pkl'
+
+
         num_data, num_nodes = log_likelihoods.shape
         print(f"number of images used: {num_data}")
         print(f"number of structures used: {num_nodes}")

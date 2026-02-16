@@ -1,17 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import seaborn as sns
-import pickle
-import sys
-import scipy
-import matplotlib as mpl
-from matplotlib.transforms import ScaledTranslation
 
+import utils
 
 def main():
 
     # Can uncomment this for nicer, slower figs, if tex is loaded
+    # note: there may be font errors with this flag off
     #mpl.rcParams['text.usetex'] = True
     mpl.rcParams['text.usetex'] = False
     
@@ -37,22 +33,21 @@ def main():
     colors = prop_cycle.by_key()['color']
    
     plot_folder = "figures/"
-    data_path = "data/"
+    data_path = "data/spike_experimental/"
     
     ## POSE EXPERIMENT 
     noise_levels = [2, 4, 6, 8, 10]
     
     # Load in stats
-    filename = data_path + "rotation_experiment_weights.pkl"
-    with open(filename, 'rb') as f:
-        file = pickle.load(f)     
+    fname = data_path + "rotation_experiment_weights.pkl"
+    file = utils.pickle_load(fname)
     em_weights = file["em_weights"]
     soft_weights = file["soft_weights"]
     hard_weights = file["hard_weights"]
     deconv_weights = file["deconv_weights"]
     
     # Hard-coded values taken from cryosparc jobs 
-    fname = "data/3D_classification_noisy_rotations.npy"
+    fname = f"{data_path}/3D_classification_noisy_rotations.npy"
     csparc_weights = np.load(fname)
 
     figname = "spike_experimental_rotation_experiment" 
@@ -69,7 +64,6 @@ def main():
     plt.xlabel("Magnitude of noise added (degrees)")
     plt.tight_layout()
     plt.savefig(f"figures/{figname}" + ".png", dpi=600)
-    plt.savefig(f"figures/{figname}" + ".pdf", dpi=600)
 
 
     ## SHIFTS EXPERIMENT
@@ -77,15 +71,14 @@ def main():
    
     # Load in stats
     filename = data_path + "shift_experiment_weights.pkl"
-    with open(filename, 'rb') as f:
-        file = pickle.load(f)     
+    file = utils.pickle_load(filename)  
     em_weights = file["em_weights"]
     soft_weights = file["soft_weights"]
     hard_weights = file["hard_weights"]
     deconv_weights = file["deconv_weights"]
 
     # Hard-coded values taken from cryosparc jobs 
-    fname = "data/3D_classification_noisy_shifts.npy"
+    fname = f"{data_path}/3D_classification_noisy_shifts.npy"
     np.save(fname, csparc_weights) 
     csparc_weights = np.load(fname)
 
@@ -106,14 +99,12 @@ def main():
     plt.xlabel("Magnitude of noise added (angstroms)")
     plt.tight_layout()
     plt.savefig(f"figures/{figname}" + ".png", dpi=600)
-    plt.savefig(f"figures/{figname}" + ".pdf", dpi=600)
 
 
     ## NOISE TO IMAGES EXPERIMENT
     # Load in stats
-    filename = data_path + "ground_truth_experiment_weights.pkl"
-    with open(filename, 'rb') as f:
-        file = pickle.load(f)     
+    fname = data_path + "noisy_images_experiment_weights.pkl"
+    file = utils.pickle_load(fname)
     em_weights = file["em_weights"]
     soft_weights = file["soft_weights"]
     hard_weights = file["hard_weights"]
@@ -125,7 +116,7 @@ def main():
     deconvolution = [deconv_weights[0, 0], deconv_weights[1, 0]]
 
     # Hard-coded values taken from cryosparc jobs 
-    fname = "data/3D_classification_noisy_images.npy"
+    fname = f"{data_path}/3D_classification_noisy_images.npy"
     csparc_weights = np.load(fname)
 
     fig, (ax1, ax2) = plt.subplots(1,2,figsize=(10, 6))
