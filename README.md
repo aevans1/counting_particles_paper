@@ -13,5 +13,11 @@ Note: To recreate the figure exactly, you will need `tex` to enable it in the ma
 The input data required for the `compute_` scripts,  was computed via the [`RECOVAR` library](https://github.com/ma-gilles/recovar) and [cryoSPARC](https://cryosparc.com/). The pipelines for these is described in the manuscript, and the scripts used to make the data are in `data_generation_scripts`:
 - simulate the synthetic datasets in RECOVAR, or manually add noise to datasets (`make_x`)
 - compute likelihoods in RECOVAR (`assign_x`)
-These functions were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting!  
+
+
+These ^ scripts are included as reference in hopes that others can repurpose some of these pipelines here. These were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting! They cannot be run directly from this repo.
+
+See the `.toml` file included for a list of minimal dependencies for running the scripts.
+
+
 
