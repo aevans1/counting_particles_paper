@@ -15,7 +15,7 @@ The input data required for the `compute_` scripts,  was computed via the [`RECO
 - compute likelihoods in RECOVAR (`assign_x`)
 
 
-These ^ scripts are included as reference in hopes that others can repurpose some of these pipelines here. These were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting! They cannot be run directly from this repo.
+These ^ scripts are included as reference for future repurposing of some of these pipelines here. These were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting! They cannot be run directly from this repo.
 
 See the `.toml` file included for a list of minimal dependencies for running the scripts.
 
