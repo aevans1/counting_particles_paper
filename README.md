@@ -17,7 +17,7 @@ The input data required for the `compute_` scripts,  was computed via the [`RECO
 
 These ^ scripts are included as reference for future repurposing of some of these pipelines here. These were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting! They cannot be run directly from this repo.
 
-The data used for these `data_generating/` scripts are from cryo-EM image datasets that are available in this [Zenodo repo](https://zenodo.org/records/18664625?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjZlMWE5NmU2LTQyZmItNGJmOC05ZWQ1LTNlZWI5MGZhODgyYiIsImRhdGEiOnt9LCJyYW5kb20iOiIzZjAwM2U3Y2YyZGFhZDk5YjI5MzkxZmU2Y2NkYjhkMSJ9.XtYougOfMXs4NGlgh_734gGOJqF3cKEXv3pkeUOJT1b1nxWkOuezLg9WRQZZ2wDyB5sQtZYtiS8eGmawlMcIfg). 
+The data used for these `data_generating/` scripts are from cryo-EM image datasets that are available in the Zenodo at [https://zenodo.org/records/18664625](https://zenodo.org/records/18664625).
 
 
 Finally, see the `.toml` file included for a list of minimal dependencies for running the scripts.
