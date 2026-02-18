@@ -4,11 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "counting-particles-paper"
-version = "0.1.0"
-description = "Analysis code for counting particles in cryo-EM using histogram reweighting"
 readme = "README.md"
 requires-python = ">=3.9"
-license = {text = "MIT"}
+license = {text = "GPL-3.0"}
 authors = [
     {name = "Luke Evans", email = "levans@flatironinstitute.org"}
 ]
