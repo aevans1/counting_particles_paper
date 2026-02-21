@@ -10,13 +10,13 @@ Figures, scripts for the paper "Counting particles in cryo-electron microscopy m
 - These scripts all use some helper functions from `utils.py`, which includes the code for discrete deconvolution and ensemble reweighting.
 
 To recreate the figure exactly as in the manuscript, you will need LaTeX installed to enable `mpl.rcParams['text.usetex'] = True`
-     in the matplotlib settings, as mentioned in the script. If you don't have `tex`, you can keep `mpl.rcParams['text.usetex'] = False` and
+     in the matplotlib settings. If you don't have LaTeX installed, you can keep `mpl.rcParams['text.usetex'] = False` but
      may have to adjust some font sizes.
 
 ## Data Generation (for reference only)
 The `data_generation_scripts` files are included as reference for future repurposing of some of these pipelines here. These were all run on a cluster with a lot of memory available, and were using older versions of RECOVAR, so if one wants to repurpose them it will take some adjusting! They cannot be run directly from this repo.
 
-The data used for these `data_generating/` scripts are from cryo-EM image datasets that are available in the Zenodo at [https://zenodo.org/records/18664625](https://zenodo.org/records/18664625).
+The data used for these `data_generating/` scripts are from cryo-EM image datasets that are available in the Zenodo at [https://zenodo.org/records/18724862](https://zenodo.org/records/18724862).
 
 The input data required for the `compute_` scripts,  was computed via the [`RECOVAR` library](https://github.com/ma-gilles/recovar) and [cryoSPARC](https://cryosparc.com/). The pipelines for these is described in the manuscript, and the scripts used to make the data are in `data_generation_scripts`:
 - simulate the synthetic datasets in RECOVAR, or manually add noise to datasets (`make_x`)
@@ -25,14 +25,12 @@ The input data required for the `compute_` scripts,  was computed via the [`RECO
 ## Packages
 The `pyproject.toml` file included contains a list of minimal dependencies for running the scripts.
 
-To do this with `venv`, you can:
-
-- Set up a virtual environment in a directory `my_venvs`
-```python -m venv my_venvs/counting_particles_venv```
-- Change to counting particles directory and install
-```cd counting_particles_paper/```
-```pip install .```
-
+To do this with `venv`, you can set up a venv in a folder `my_venvs` and install, with something similar to:
+```
+python -m venv my_venvs/counting_particles_venv
+cd counting_particles_paper/
+pip install .
+```
 
 
 
