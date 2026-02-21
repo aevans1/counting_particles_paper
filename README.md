@@ -16,8 +16,7 @@ The repository is organized into three main sections:
    Scripts implementing ensemble reweighting and deconvolution methods used in the manuscript (primarily `compute_weights.py` and `utils.py`).
 
 3. **Figure generation**  
-   Scripts used to generate manuscript figures from precomputed data.  
-   (LE: is this in zenodo or data in this repo?)
+   Scripts used to generate manuscript figures from precomputed data in the `data/` folder of this repo.
 
 ---
 
@@ -36,55 +35,44 @@ pip install .
 
 ## 1. Data Generation 
 
-The `data_generation_scripts` files are included as reference for future repurposing of some of these pipelines. These are the scripts used to generate the `data` available in Zenodo at  
-https://zenodo.org/records/18724862. (LE: please explain what is available in data repo??)
+The `data_generation_scripts` files are included as reference for future repurposing of these pipelines. These are the scripts used to generate the likelihoods, misclassification probabilities, and latent data used in the `data/` folder in this repo.  The scripts were run on cryo-EM particles which are available in the Zenodo at  
+https://zenodo.org/records/18724862. 
 
-Note that these cannot run without installing several external cryo-EM software packages, including RECOVAR, cryoDRGN, and [cryoSPARC](https://cryosparc.com/).  
-(LE: include references please).
+Note that these cannot run without installing several external cryo-EM software packages, including [RECOVAR](https://github.com/ma-gilles/recovar), [cryoDRGN](https://github.com/ml-struct-bio/cryodrgn), and [cryoSPARC](https://cryosparc.com/).  
 
-However, one does not need to re-generate the data in order to reproduce the results of the manuscript, since it is already available.  
-(LE: where? zenodo or here).
+However, one does not need to re-generate the data in order to reproduce the results of the manuscript, as this is already included in the folder `data/` of this repo. 
 
 ### 1.1 Synthetic Data Generation
 
 More specifically, we generate the synthetic data with:
 
-- `make_x` script: simulates the synthetic datasets in RECOVAR, where `_x` denotes a particular dataset.  
-  (LE: please add details, output simulated images and star file?)  
-  It also allows adding noise to each dataset.
+- `make_x` script: simulates the synthetic datasets, where `_x` denotes a particular dataset.  
+ For `igg` and `spike_synthetic`, these scripts generate the particles, starfiles and related RECOVAR metadata using the RECOVAR simulator.  
+ For `spike_experimental`, these scripts adding noise to the dataset in either images or pose.
 
 ### 1.2 Likelihood and Misclassification Computation
 
 Then, we compute the likelihoods and misclassification assignments in RECOVAR using:
 
-- `assign_x`: computes likelihoods and misclassification given a `.star` file as input.  
-  (LE: please add details).
+- `assign_x`: computes likelihoods and misclassification given a `.star` file and RECOVAR metadata as input. 
 
-The outputs are stored  
-(LE: what and where?)  
-
-and are used as inputs in the following section.
+The outputs are stored in `data/` and are used as inputs in the following section.
 
 We also note that these scripts were run on a cluster with substantial memory resources and were executed using older versions of RECOVAR. Therefore, if one wishes to repurpose them, some adjustments will likely be necessary. They cannot be run directly from this repository without additional setup.
 
 ## 2. Reweighting / Deconvolution Analysis Scripts
 
 After generating (or downloading) the data, we obtain the inputs required for the `compute_weights` script.  
-(LE: add the names of files)
 
 The `compute_weights` script:
 
-- Computes probability weights from a likelihood matrix input  
+- Computes hard-assigned and soft-assigned weights from a likelihood matrix input  
 - Performs ensemble reweighting using a multiplicative gradient approach  
-  (LE: please clarify and correct)
 - Alternatively performs deconvolution using the [`RECOVAR` library](https://github.com/ma-gilles/recovar)
 
-The full computational pipelines for these procedures are described in the manuscript.  
-(LE: what sections?)
+The full computational pipelines for these procedures are described in the manuscript Supplementary Sections 3 and 4.
 
-This script uses helper functions defined in `utils.py`, which contains basic utilities for both deconvolution and ensemble reweighting.
-
-(LE: explain the output)
+This script uses helper functions defined in `utils.py`, which contains basic utilities for both deconvolution and ensemble reweighting. The outputs for deconvolution are a set of weights obtained from Supplementary Sections 3.2 eqn. 17 in the manuscript, the the outputs for ensemble reweighting are a set of weights obtained from Supplementary Sections 3.1 eqn. 11 in the manuscript. 
 
 ---
 
