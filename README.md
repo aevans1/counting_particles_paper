@@ -28,6 +28,7 @@ The `pyproject.toml` file included contains a list of minimal dependencies for r
 To do this with `venv`, you can set up a venv in a folder `my_venvs` and install, with something similar to:
 ```
 python -m venv my_venvs/counting_particles_venv
+source my_venvs/counting_particles_venv/bin/activate
 cd counting_particles_paper/
 pip install .
 ```
