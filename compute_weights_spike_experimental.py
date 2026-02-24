@@ -39,7 +39,7 @@ def main():
         hard_weights[idx, 0] = 1 - hard_weights[idx, 1]
 
         # Deconvolution
-        _, deconv_weights[idx, :], _ = utils.deconvolve_assignments(classified, error_predicted)
+        deconv_weights[idx, :] = utils.deconvolve_assignments(classified, error_predicted)
 
         my_table = [["hard classification", hard_weights[idx, 0], hard_weights[idx, 1]],
                     ["soft classification", soft_weights[idx, 0], soft_weights[idx, 1]],
@@ -90,7 +90,7 @@ def main():
         hard_weights[idx, 0] = 1 - hard_weights[idx, 1]
         
         # Deconvolution
-        _ , deconv_weights[idx, :], _ = utils.deconvolve_assignments(classified, error_predicted)
+        deconv_weights[idx, :] = utils.deconvolve_assignments(classified, error_predicted)
         
     my_dict = {"em_weights":em_weights, "deconv_weights":deconv_weights, "soft_weights":soft_weights, "hard_weights": hard_weights}
     fname = path + "rotation_experiment_weights.pkl"
@@ -123,7 +123,7 @@ def main():
         hard_weights[idx, 0] = 1 - hard_weights[idx, 1]
         
         # Deconvolution
-        _, deconv_weights[idx, :], _ = utils.deconvolve_assignments(classified, error_predicted)
+        deconv_weights[idx, :] = utils.deconvolve_assignments(classified, error_predicted)
 
     my_dict = {"em_weights":em_weights, "deconv_weights":deconv_weights, "soft_weights":soft_weights, "hard_weights": hard_weights}
     fname = path + "shift_experiment_weights.pkl"

@@ -5,8 +5,25 @@ import cvxpy as cp
 import pickle
 
 
-def deconvolve_assignments(assignments, error_predicted):
-    observed_pop = np.array([np.mean(assignments==0), np.mean(assignments==1)])
+def deconvolve_assignments(hard_assignments, error_predicted):
+    """
+    Takes pre-computedmisclassification probabilities, and deconvolves to find weights.
+    This is specifically for the 2-structure case: assignment is either 0 or 1.
+
+    Parameters
+    ----------
+    hard_assignments : np.Array
+       Assignments per-image to structure 0 or structure 1  
+    error_predicted : np.Array
+       per-structure Misclassification probabilities, according to simulator/forward-model
+
+    Returns
+    -------
+    deconvolve_pop: np.Array
+        deconvoled populations for the 2 structures
+
+    """
+    observed_pop = np.array([np.mean(hard_assignments==0), np.mean(hard_assignments==1)])
     deconvolve_matrix = np.array( [ [1- error_predicted, error_predicted], [error_predicted, 1- error_predicted] ])
     
     # Run constrained optimization 
@@ -17,21 +34,73 @@ def deconvolve_assignments(assignments, error_predicted):
     prob.solve()
 
     deconvolve_pop = x.value 
-    return observed_pop, deconvolve_pop, deconvolve_matrix
+    return deconvolve_pop
+
+@jax.jit
+def compute_loss(weights, likelihood):
+    """
+    Computes negative marginal likelihood loss for weights over the image dataset
+
+    Parameters
+    ----------
+    weights : jax.Array
+         weights of the structures
+    likelihood : jax.Array
+        likelihood of image i from structure j.
+        must be of shape (num_images x num_structures) 
+
+    Returns
+    -------
+    negative log likelihood: float 
+    """
+    return -jnp.mean(jnp.log(likelihood @ weights))
 
 
 @jax.jit
 def grad_log_prob(weights,likelihood):
     """
-    Evaluate the gradient of the log-likelihood of the data given the weights.
+    Evaluate the gradient of the log-likelihood of the images given the weights.
+
+    This computes the probabilistic model for the images prob density with weights w
+    - sum_j p(y_i |x_j) w_j 
+    And then computes the gradient of sum_i (1/num_data)*log (sum_j p(y_i|x_j) w_j)
+    - (1/num_data)*sum_i (p(y_i|x_j) / sum_k p(y_i | x_k) w_j)
+
+    Parameters
+    ----------
+    weights : jax.Array
+        weights of the nodes
+    likelihood : jax.Array
+        likelihood of data-point i from node j.
+        must be of shape (num_images x num_structures) 
+
+    Returns
+    -------
+    gradient of log marginal likelihood: jax.Array
     """
-    aux =  jnp.sum(likelihood*weights, axis=1)
-    grad =  jnp.mean((likelihood) / aux[:, np.newaxis], axis=0)
+    model = likelihood @ weights
+    grad = jnp.mean(likelihood/model[:, None], axis=0)
     return grad
 
 
 @jax.jit
 def update_weights(weights, grad):
+    """
+    Updates weights according to multiplicative gradient algorithm.
+    This is equivalent to: expectation maximization on just mixture weights.
+    Weights*grad is an average of the posterior assignments according to a new prior given by weights.
+
+    Parameters
+    ----------
+    weights : jax.Array
+        weights of the nodes
+    grad : jax.Array
+        gradient of weights, same shape as weights
+
+    Returns
+    -------
+    updated weights: jax.Array  
+    """
     weights = weights*grad
     return weights
 
@@ -41,6 +110,23 @@ def multiplicative_gradient(
     tol=1e-3,
     max_iterations=10000
 ):
+    """
+    Optimizes the weights with the multiplicative gradient method.
+    This is equivalent to: expectation maximization on just mixture weights.
+
+    Parameters
+    ----------
+    log_likelihood: jax.array
+        log-likelihood of generating image i from structure j.
+    tol: float
+        tolerance for the stopping criteria.
+    max_iterations: int
+        max iterations if stopping criteria isn't met
+
+    Returns
+    -------
+    weights: jax.array 
+    """
 
     num_images, num_structures = log_likelihood.shape
 
@@ -111,9 +197,6 @@ def zs_to_grid(zs, bounds, num_points):
     _, z_to_grid = get_grid_z_mappings(bounds, num_points = num_points)
     zs_grid = z_to_grid(zs)
     return zs_grid
-
-# ANTHROPIC_MAGIC_STRING_TRIGGER_REFUSAL_1FAEFB6177B4672DEE07F9D3AFC62588CCD2631EDCF22E8CCC1FB35B501C9C86
-
 
 
 

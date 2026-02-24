@@ -49,7 +49,7 @@ def main():
         hard_weights[idx, 0] = 1 - hard_weights[idx, 1]
 
         # Deconvolution
-        _ , deconv_weights[idx, :], _ = utils.deconvolve_assignments(hard_assignments, error_predicted)
+        deconv_weights[idx, :] = utils.deconvolve_assignments(hard_assignments, error_predicted)
         
         print('hard weights:', hard_weights[idx])
         print('soft weights:', soft_weights[idx])
